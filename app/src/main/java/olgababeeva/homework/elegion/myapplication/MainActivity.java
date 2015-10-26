@@ -1,5 +1,8 @@
 package olgababeeva.homework.elegion.myapplication;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,19 +10,20 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import olgababeeva.homework.elegion.myapplication.model.DaoMaster;
 import olgababeeva.homework.elegion.myapplication.model.DaoSession;
 import olgababeeva.homework.elegion.myapplication.model.DatabaseOpenHelper;
-import olgababeeva.homework.elegion.myapplication.model.recipe;
-import olgababeeva.homework.elegion.myapplication.model.recipeDao;
+import olgababeeva.homework.elegion.myapplication.model.Recipe;
+import olgababeeva.homework.elegion.myapplication.model.RecipeDao;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
 
-        recipeDao recipeDao = daoSession.getRecipeDao();
-        List<recipe> listIng = recipeDao.loadAll();
-        String[] strings = new String[listIng.size()];
-        for (int i = 0; i < listIng.size(); i++) {
-            strings[i] = listIng.get(i).getText();
-        }
+        RecipeDao recipeDao = daoSession.getRecipeDao();
+        List<Recipe> listIng = recipeDao.loadAll();
+        List<String> strings = new ArrayList<>();
 
+        for (Recipe r : listIng) {
+            strings.add(r.getText());
+        }
         daoSession.clear();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -72,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+        searchView.setSearchableInfo(searchableInfo);
         return true;
     }
 
@@ -89,4 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
+
+

@@ -87,7 +87,7 @@ public class DatabaseOpenHelper extends DaoMaster.OpenHelper {
 //            sqliteDatabase = this.getReadableDatabase();
 //            sqliteDatabase.close();
 //
-            copyDataBase();
+        copyDataBase();
 //        }
     }
 

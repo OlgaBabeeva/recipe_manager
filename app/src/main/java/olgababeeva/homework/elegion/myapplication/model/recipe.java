@@ -4,20 +4,20 @@ package olgababeeva.homework.elegion.myapplication.model;
 /**
  * Entity mapped to table "RECIPE".
  */
-public class recipe {
+public class Recipe {
 
     private Long id;
     private String text;
     private Long likes;
 
-    public recipe() {
+    public Recipe() {
     }
 
-    public recipe(Long id) {
+    public Recipe(Long id) {
         this.id = id;
     }
 
-    public recipe(Long id, String text, Long likes) {
+    public Recipe(Long id, String text, Long likes) {
         this.id = id;
         this.text = text;
         this.likes = likes;
