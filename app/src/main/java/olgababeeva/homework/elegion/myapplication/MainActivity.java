@@ -12,9 +12,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +28,8 @@ import java.util.List;
 import olgababeeva.homework.elegion.myapplication.model.DaoMaster;
 import olgababeeva.homework.elegion.myapplication.model.DaoSession;
 import olgababeeva.homework.elegion.myapplication.model.DatabaseOpenHelper;
+import olgababeeva.homework.elegion.myapplication.model.Ingredients;
+import olgababeeva.homework.elegion.myapplication.model.IngredientsDao;
 import olgababeeva.homework.elegion.myapplication.model.Recipe;
 import olgababeeva.homework.elegion.myapplication.model.RecipeDao;
 
@@ -62,10 +70,38 @@ public class MainActivity extends AppCompatActivity {
         }
         daoSession.clear();
 
+        IngredientsDao ingredientsDao = daoSession.getIngredientsDao();
+        List<Ingredients> ingredientList = ingredientsDao.loadAll();
+        String[] ingredientNames = new String[ingredientList.size()];
+        for (int i = 0; i < ingredientList.size(); i++) {
+            ingredientNames[i] = ingredientList.get(i).getName();
+        }
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, ingredientNames);
+        MultiAutoCompleteTextView textView = (MultiAutoCompleteTextView)
+                findViewById(R.id.editText);
+        textView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+
+        textView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(
+                                getApplicationContext(), adapter.getItem(position), Toast.LENGTH_LONG).show();
+
+                    }
+
+
+                });
+        textView.setAdapter(adapter);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
         mRecyclerView.setHasFixedSize(true);
 
         mAdapter = new MyAdapter(strings);
+
         mLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);

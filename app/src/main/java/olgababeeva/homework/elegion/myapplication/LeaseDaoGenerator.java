@@ -17,7 +17,7 @@ public class LeaseDaoGenerator {
         recipe.addStringProperty("text");
         recipe.addLongProperty("likes");
 
-        Entity ingredient = schema.addEntity("Ingredient");
+        Entity ingredient = schema.addEntity("Ingredients");
         ingredient.addIdProperty();
         ingredient.addStringProperty("name");
         ingredient.addStringProperty("recipe_id");
